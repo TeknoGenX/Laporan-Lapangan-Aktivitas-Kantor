@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Laporan Baru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Form Input Laporan</h2>
+
+        <div class="flex justify-center mb-6 border-b">
+            <button onclick="showForm('lapangan')" id="btn-lap" class="px-4 py-2 text-blue-600 border-b-2 border-blue-600 font-bold focus:outline-none">Laporan Lapangan</button>
+            <button onclick="showForm('kantor')" id="btn-kan" class="px-4 py-2 text-gray-500 hover:text-blue-600 focus:outline-none">Laporan Kantor</button>
+        </div>
+
+        <div id="form-lapangan">
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+                
+                {% for field in form_lap %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                    <div class="mt-1 block w-full">
+                        {{ field }} 
+                    </div>
+                    {% if field.help_text %}
+                    <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                    <p class="text-xs text-red-500 mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" name="submit_lapangan" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 font-bold mt-4">
+                    Kirim Laporan Lapangan
+                </button>
+            </form>
+        </div>
+
+        <div id="form-kantor" class="hidden">
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+                
+                {% for field in form_kan %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                    <div class="mt-1 block w-full">
+                        {{ field }}
+                    </div>
+                    {% if field.help_text %}
+                    <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <button type="submit" name="submit_kantor" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 font-bold mt-4">
+                    Kirim Laporan Kantor
+                </button>
+            </form>
+        </div>
+        
+        <div class="mt-6 text-center">
+            <a href="{% url 'dashboard' %}" class="text-gray-500 hover:text-gray-800 text-sm">← Kembali ke Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        // Styling otomatis untuk input Django agar rapi dengan Tailwind
+        const inputs = document.querySelectorAll('input:not([type="checkbox"]):not([type="file"]), textarea, select');
+        inputs.forEach(input => {
+            input.classList.add('w-full', 'border', 'border-gray-300', 'p-2', 'rounded', 'focus:ring', 'focus:ring-blue-200', 'focus:border-blue-500', 'outline-none');
+        });
+
+        // Styling khusus file input
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        fileInputs.forEach(input => {
+            input.classList.add('block', 'w-full', 'text-sm', 'text-gray-500', 'file:mr-4', 'file:py-2', 'file:px-4', 'file:rounded-full', 'file:border-0', 'file:text-sm', 'file:font-semibold', 'file:bg-blue-50', 'file:text-blue-700', 'hover:file:bg-blue-100');
+        });
+
+        function showForm(type) {
+            const fLap = document.getElementById('form-lapangan');
+            const fKan = document.getElementById('form-kantor');
+            const bLap = document.getElementById('btn-lap');
+            const bKan = document.getElementById('btn-kan');
+
+            if (type === 'lapangan') {
+                fLap.classList.remove('hidden');
+                fKan.classList.add('hidden');
+                bLap.className = "px-4 py-2 text-blue-600 border-b-2 border-blue-600 font-bold focus:outline-none";
+                bKan.className = "px-4 py-2 text-gray-500 hover:text-blue-600 focus:outline-none";
+            } else {
+                fLap.classList.add('hidden');
+                fKan.classList.remove('hidden');
+                bKan.className = "px-4 py-2 text-green-600 border-b-2 border-green-600 font-bold focus:outline-none";
+                bLap.className = "px-4 py-2 text-gray-500 hover:text-green-600 focus:outline-none";
+            }
+        }
+    </script>
+</body>
+</html>
